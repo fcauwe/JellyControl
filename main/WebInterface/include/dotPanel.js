@@ -322,7 +322,9 @@ function loadPanel(name){
   $.getJSON(getLink + "panel.openPanel.json?name=" + name + "&jsoncallback=?",
     function(data){
       actorList=data.actorList;
-      $("body").switchClass(panelClass,data.panelClass);
+      if(panelClass!=data.panelClass){
+        $("body").switchClass(panelClass,data.panelClass);
+      }
       panelClass=data.panelClass;
       document.title = ".Panel: " + panelName;
       generatePanel(); 
