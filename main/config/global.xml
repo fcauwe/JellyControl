@@ -1,0 +1,15 @@
+<configuration>
+  <componentModel>
+    <title>General Test</title>
+    <filename>models/default</filename>
+    <services>
+     <service><name>Output</name><type>ModbusIO.ModbusIOClient</type><config>io.xml</config></service>
+    </services>
+  </componentModel>
+  <webinterface>
+    <hostname>localhost</hostname>
+    <port>8080</port>
+    <title>VisionCheck Dashboard</title>
+    <updateDelay>20</updateDelay>
+  </webinterface>
+</configuration>

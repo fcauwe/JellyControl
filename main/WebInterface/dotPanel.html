@@ -1,0 +1,75 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; utf-8" />
+<title>.Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" /> 
+<meta charset="UTF-8">
+
+<link href="favicon.ico" rel="icon" type="image/x-icon" />
+<script type="text/javascript" src="include/jquery.js"></script>
+<script type="text/javascript" src="include/jquery-ui.min.js"></script>
+<script type="text/javascript" src="include/webtoolkit.base64.js"></script> 
+<script type="text/javascript" src="include/dotPanel.js"></script> 
+<link rel="stylesheet" type="text/css" href="include/jquery-ui.css"/>    	
+<link rel="stylesheet" type="text/css" href="include/dotPanel.css"/>    	
+</head>
+<body class="panelBlack">
+
+<div  class="globalHeader">
+  <div id="progressBackground"></div>
+  <div id="progress"></div>
+</div>
+
+<div id="content"></div>
+
+
+<div id="dialog-edit" title="Edit actor?">
+
+<form>
+<input type="hidden" id="form-actorname" />
+
+<label for="title">Title: </label>
+<input type="text" id="form-title" class="text ui-widget-content ui-corner-all" /> <br>
+
+<label for="form-source">State source: </label>
+<select id="form-source" class="text ui-widget-content ui-corner-all" > </select><br>
+
+<label for="form-actionlink">Action link: </label>
+<input type="text" id="form-actionlink" class="text ui-widget-content ui-corner-all" /> <br>
+
+<label for="form-actionevent">Action event: </label>
+<select id="form-actionevent" class="text ui-widget-content ui-corner-all" > </select><br>
+
+<label for="email">Style:</label>
+<select id="form-css" class="text ui-widget-content ui-corner-all" >
+ <option value="">none</option>
+ <option value="Button">Simple Button</option>
+ <option value="Button3D">3D Button</option>
+ <option value="ImageActive">Image: Active visible</option>
+ <option value="ImageInactive">Image: Inactive visible</option>
+ <option value="ImageFade">Image: Fade out when inactive</option>
+</select>
+ <br>
+
+<label for="email">Image: </label>
+<input type="text" id="form-image" class="text ui-widget-content ui-corner-all" /> <br>
+
+
+<label for="email">Resizable:</label>
+<input type="checkbox" id="form-resizable" value="1" class="text ui-widget-content ui-corner-all"> <br>
+
+</form>
+
+</div>
+
+<div onclick="newActor()" id="addActor">
++
+</div>
+
+<div onclick="savePanel()" id="savePanel">
+S
+</div>
+
+
+</body>
+</html>

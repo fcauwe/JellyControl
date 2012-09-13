@@ -1,0 +1,12 @@
+  <services>
+    <service>
+      <name>Input1</name>
+      <module>Modbus.Input</module>
+      <config>text.xml</config>
+    </services>
+    <service>
+      <name>Output1</name>
+      <module>Modbus.Output</module>
+      <config>text.xml</config>
+    </services>
+ </services>

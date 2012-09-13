@@ -1,0 +1,31 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>.Connect</title>
+  <link rel="stylesheet" href="include/style.css">
+  <link rel="stylesheet" href="include/dotConnect.css">
+</head>
+<body onunload="jsPlumb.unload();">
+<div id="workspace">
+</div>
+
+<div id="explanation">
+ <h1>.Connect</h1>
+ <p>Connecting your objects together.</p>
+ <p><a onclick=addComp() href=#>Add component</a> </p>
+ <p><a onclick=removeComp() href=#>Remove component</a> </p>
+ <p><a onclick=saveModel() href=#>Save Model</a> </p>
+ <p>Switch workspace: <a onclick=switchWorkspace("default") href=#>default</a> 
+                      <a onclick=switchWorkspace("test1") href=#>test1</a> </p>
+</div>
+
+<script type='text/javascript' src='include/jquery.min.js'></script>
+<script type='text/javascript' src='include/jquery-ui.min.js'></script>
+<script type='text/javascript' src='include/jquery.jsPlumb-1.3.9-all-min.js'></script>
+<script type='text/javascript' src='include/json2.js'></script>
+<script type='text/javascript' src='include/webtoolkit.base64.js'></script>
+<script type="text/javascript" src="include/dotConnect.js"></script>
+
+</body>
+</html>
