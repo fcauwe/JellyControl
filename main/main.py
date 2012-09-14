@@ -51,25 +51,12 @@ def main():
   # Start Webinterface
   webInterfaceThread = threading.Thread(target=launch_web_interface)
   webInterfaceThread.start()
-  
-  # Start dummy events
-  #Components.Events.generate("Module1","In1OnChange",{"value":True});
-  #Components.Events.generate("Module1","In2OnChange",{"value":True});
-  #Components.Events.generate("Module1","In3OnChange",{"value":True});
-  #Components.Events.generate("Module1","In1OnChange",{"value":True});
-  #Components.Events.generate("Module1","In2OnChange",{"value":True});
-  #Components.Events.generate("Module1","In3OnChange",{"value":True});
-  #Components.Events.generate("Module1","In1OnChange",{"value":True});
-  #Components.Events.generate("Module1","In2OnChange",{"value":True});
-  #Components.Events.generate("Module1","In3OnChange",{"value":True});
-    
-
 
   # Wait for closing
   webInterfaceThread.join()
   Components.Model.eventQueue.join()
   logger.info("Closing...")
-  time.sleep(0.5)    
+  time.sleep(0.1)    
 
 if __name__ == '__main__':
     main()
