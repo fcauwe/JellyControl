@@ -66,21 +66,23 @@ def Process(filename,args):
         components=args["components"].split(",")
         ## If a delay as been set, send state after the delay or when something changed
         if(args.has_key("delay")):
-          delay=int(args["delay"])
+          refreshRate=0.3
+          delay=float(args["delay"])
           if(delay>60):
             delay=60
-          eventCount_current=Model.eventCount+1
-          while((delay>=0) and (eventCount_current>Model.eventCount)):
-            time.sleep(1)
-            delay-=1
+          currentStateVersion=Manager.componentStateVersion(components)
+          while((delay>=0) and (currentStateVersion==Manager.componentStateVersion(components)) and (GlobalObjects.running)):
+            time.sleep(refreshRate)
+            delay-=refreshRate
           ## wait a bit so that all needed events are processed
-          time.sleep(0.3)
+          time.sleep(0.2)
         state = dict()
         for component in components:
-            if Model.state.has_key(component):
-                state[component]=Model.state[component]
+            if Model.modelComponents.has_key(component):
+                state[component]=Model.modelComponents[component].getState()
             else:
 		state[component]={"error":True}
+        state["version"]=Manager.componentStateVersion(components)
         json_response=state
 
     elif filename == "panel.openPanel.json":

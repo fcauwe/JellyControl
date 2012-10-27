@@ -1,102 +1,121 @@
-#import blocks,events
-from Components import Events,Model
-## ObjectName,eventName,eventValue 
+from Components import Events,Component
 
-class RisingEdge:
-  Name = "RisingEdge"
+class RisingEdge(Component.generic):
+  Name = 'RisingEdge'
   sinkList = ['In']
   sourceList = ['Out']
-  defaultConfig={}
   defaultState={'value':False}
-  defaultInternalState={}
-  @staticmethod
-  def catchEvent(component,event,value):
-    if (event=="In"):
-      #print component + " Event: " + event + " " + str(Model.state[component])
-      if((value["value"]==True) and (Model.state[component]["value"]==False)):
-        Events.generate(component,"Out",{'value':True})
+
+  def __init__(self):
+    Component.generic.__init__(self)
+
+  def catchEvent(self,component,event,value):
+    if (event=='In'):
+      if((value['value']==True) and (self.getStateVariable('value')==False)):
+        Events.generate(component,'Out',{'value':True})
       else:
-        Events.generate(component,"Out",{'value':False})
-      Model.state[component]["value"]=value["value"]
+        Events.generate(component,'Out',{'value':False})
+      self.setStateVariable('value',value['value'])
 
 
-class SetReset:
-  Name = "SetReset"
+class SetReset(Component.generic):
+  Name = 'SetReset'
   sinkList = ['Set','Reset','Toggle']
   sourceList = ['Out']
-  defaultConfig={}
   defaultState={'value':False}
-  defaultInternalState={}
-  @staticmethod
-  def catchEvent(component,event,value):
-    if (value["value"]==True):
-      if (event=="Set"):
-        Model.state[component]["value"]=True
-      elif(event=="Reset"):
-        Model.state[component]["value"]=False
-      elif(event=="Toggle"):
-        Model.state[component]["value"]= not Model.state[component]["value"]
-      Events.generate(component,"Out",Model.state[component])
+ 
+  def __init__(self):
+    Component.generic.__init__(self)
 
-class AndPort:
-  Name = "AndPort"
+  def catchEvent(self,component,event,value):
+    if (value['value']==True):
+      if (event=='Set'):
+        result=True
+      elif(event=='Reset'):
+        result=False
+      elif(event=='Toggle'):
+        result=not self.getStateVariable('value')
+      if (result != self.getStateVariable('value')):
+        self.setStateVariable('value',result)
+        Events.generate(component,'Out',{'value':result})
+
+class AndPort(Component.generic):
+  Name = 'AndPort'
   sinkList = ['In1','In2']
   sourceList = ['Out']
-  visibleState=['value']
   defaultState={'value':False}
-  defaultInternalState={'in1':False,'in2':False}
-  @staticmethod
-  def catchEvent(component,event,value):
-    if (event=='In1'):
-      Model.intstate[component]['in1']=bool(value['value'])
-    elif(event=='In2'):
-      Model.intstate[component]['in2']=bool(value['value'])
-    
-    Model.state[component]['value']=Model.intstate[component]['in1'] and Model.intstate[component]['in2']
-    Events.generate(component,'Out',{'value':Model.state[component]['value']})
 
-class OrPort:
-  Name = "OrPort"
+  def __init__(self):
+    Component.generic.__init__(self)
+    self.in1=False
+    self.in2=False
+  
+  def catchEvent(self,component,event,value):
+    if (event=='In1'):
+      self.in1=bool(value['value'])
+    elif(event=='In2'):
+      self.in2=bool(value['value'])
+
+    result = self.in1 and self.in2
+ 
+    if (result != self.getStateVariable('value')):
+      self.setStateVariable('value',result)
+      Events.generate(component,'Out',{'value':result})
+
+class OrPort(Component.generic):
+  Name = 'OrPort'
   sinkList = ['In1','In2']
   sourceList = ['Out']
-  defaultConfig={}
   defaultState={'value':False}
-  defaultInternalState={'in1':False,'in2':False}
-  @staticmethod
-  def catchEvent(component,event,value):
-    if (event=='In1'):
-      Model.intstate[component]['in1']=bool(value['value'])
-    elif(event=='In2'):
-      Model.intstate[component]['in2']=bool(value['value'])
-    
-    Model.state[component]['value']=Model.intstate[component]['in1'] or Model.intstate[component]['in2']
-    Events.generate(component,'Out',{'value':Model.state[component]['value']})
 
-class NotPort:
-  Name = "NotPort"
+  def __init__(self):
+    Component.generic.__init__(self)
+    self.in1=False
+    self.in2=False
+  
+  def catchEvent(self,component,event,value):
+    if (event=='In1'):
+      self.in1=bool(value['value'])
+    elif(event=='In2'):
+      self.in2=bool(value['value'])
+ 
+    result = self.in1 or self.in2
+   
+    if (result != self.getStateVariable('value')):
+      self.setStateVariable('value',result)
+      Events.generate(component,'Out',{'value':result})
+
+class NotPort(Component.generic):
+  Name = 'NotPort'
   sinkList = ['In']
   sourceList = ['Out']
   defaultState={'value':False}
-  defaultInternalState={}
-  @staticmethod
-  def catchEvent(component,event,value):
-    Model.state[component]['value']=not bool(value['value'])
-    Events.generate(component,'Out',{'value':(not bool(value['value']))})
+ 
+  def __init__(self):
+    Component.generic.__init__(self)
+  
+  def catchEvent(self,component,event,value):
+    result = not bool(value['value'])
 
-class ProxyPort:
-  Name = "ProxyPort"
+    if (result != self.getStateVariable('value')):
+      self.setStateVariable('value',result)
+      Events.generate(component,'Out',{'value':result})
+
+class ProxyPort(Component.generic):
+  Name = 'ProxyPort'
   sinkList = ['In']
   sourceList = ['Out']
-  defaultState={}
   defaultState={'value':False}
-  defaultInternalState={}
-  @staticmethod
-  def catchEvent(component,event,value):
-    Model.state[component]['value']=value['value']
-    Events.generate(component,'Out',{'value':value['value']})
 
+  def __init__(self):
+    Component.generic.__init__(self)
+  
+  def catchEvent(self,component,event,value):
+    result = bool(value['value'])
 
+    if (result != self.getStateVariable('value')):
+      self.setStateVariable('value',result)
+      Events.generate(component,'Out',{'value':result})
 
-
-
+ 
 

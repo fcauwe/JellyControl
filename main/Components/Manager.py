@@ -1,9 +1,9 @@
 import Queue
 import json
 import logging, logging.config
-import sys, time, threading
+import sys, time, threading,traceback,os.path
 
-import Model,Events
+import Model,Events,Component
 import Factory,Services
 from Factory import *
 from Services import *
@@ -22,25 +22,20 @@ def loadModel(filename):
   logger.info("Loading model " + filename + "...")
   Model.model=openModel(filename)
 
-def createLocks():
-  Model.locks = dict()
-  for name in Model.model.keys():
-    Model.locks[name]=threading.Lock() 
-
-def createState():
+def loadComponents():
   logger=logging.getLogger("manager")
-  Model.intstate = dict()
-  Model.state = dict()
+  #Model.modelComponents = dict()
   for name in Model.model.keys():
     componentPath=Model.model[name]["type"].split('.')
-    try:
-      if(componentPath[0]!="service"):
+    if(componentPath[0]!='service'):
+      try:
         component=getattr(getattr(Factory,componentPath[0]),componentPath[1]) 
-        Model.state[name]=dict(getattr(getattr(Factory,componentPath[0]),componentPath[1]).defaultState)
-        Model.intstate[name]=dict(getattr(getattr(Factory,componentPath[0]),componentPath[1]).defaultInternalState)
-    except Exception, e:
-      logger.error("Component " + name + " / " + Model.model[name]["type"] + " has no state vector.")
-      continue
+        Model.modelComponents[name]=component()
+      except Exception, e:
+        tb = traceback.extract_tb(sys.exc_info()[2])[-1]      
+        logger.error("Could not load component " + name + " / " + Model.model[name]["type"] + ": "
+                      + e.message + " (" +os.path.basename(tb[0]) + ":" + str(tb[1])+ ").")
+        continue
 
 
 def processEvent():
@@ -51,24 +46,13 @@ def processEvent():
     ## Get an event from the queue
     event = Model.eventQueue.get()
     logger.info("Processing event " + str(event))
-    ## Get event type
-    componentType=Model.model[event[0]]["type"]
-    if(Model.components.has_key(componentType)):
-      componentPath=componentType.split('.')
-      Model.locks[event[0]].acquire()
-      try:
-        if(componentPath[0]=="service"):
-          Model.services[componentPath[1]].catchEvent(event[0],event[1],event[2])
-        else:
-          getattr(getattr(Factory,componentPath[0]),componentPath[1]).catchEvent(event[0],event[1],event[2]) 
-        # callComponentEvent(componentType,event[0],event[1],event[2])
-      except Exception, e:
-        logger.error("Component " + componentType + " (" + event[0] + ") terminated: " + e.message)
-      
-      Model.locks[event[0]].release()
-    else:  
-      logger.error("ComponentType not found: " + componentType + " (" + event[0] + ")")
-    Model.eventCount+=1 
+    try:
+      Model.modelComponents[event[0]].catchEventThreadSafe(event[0],event[1],event[2]) 
+    except Exception, e:  
+      tb = traceback.extract_tb(sys.exc_info()[2])[-1]      
+      logger.error("Could not execute " + event[0] + " (" + event[1] + "): "
+                      + e.message + " (" +os.path.basename(tb[0]) + ":" + str(tb[1])+ ").")
+
     Model.eventQueue.task_done()
 
 
@@ -80,12 +64,13 @@ def listAllComponents():
       moduleObject=getattr(Factory,module)
       for component in dir(moduleObject):
         try:
-          if ((component[0]!="_") and (component !="Events") and (component !="Model")):
-            componentObject=getattr(moduleObject,component)
-            componentList[module + "." + component]={'sources':componentObject.sourceList,
-                                                     'sinks':componentObject.sinkList}
+          componentObject=getattr(moduleObject,component)
+          if(type(componentObject)==type(Component.generic)):
+            if(issubclass(componentObject,Component.generic)):
+              componentList[module + "." + component]={'sources':componentObject.sourceList,
+                                                       'sinks':componentObject.sinkList}
         except Exception, e:
-          logger.error("Could not load " + component + ": " + e.message)
+          logger.error("Could not inspect " + component + ": " + e.message)
           continue
   for module in Model.services:
      componentList["service." + module] = {'sources':Model.services[module].sourceList,
@@ -95,8 +80,8 @@ def listAllComponents():
 
 def listAllStates():
   stateList = []
-  for component in Model.state.keys():
-    for state in Model.state[component].keys():
+  for component in Model.modelComponents.keys():
+    for state in Model.modelComponents[component].getState().keys():
       stateList.append(component + "." + state)
   return stateList
 
@@ -113,14 +98,23 @@ def listAllEvents():
       pass
   return eventList
 
+def componentStateVersion(components):
+  version = 0
+  for component in components:
+    if Model.modelComponents.has_key(component):
+      version += Model.modelComponents[component].getStateVersion()
+  return version
+
+
 def addService(componentType,componentName,configurationXml):
-  Model.services[componentName] = Services.ModbusIO.ModbusIO(componentName,configurationXml)
+  Model.modelComponents[componentName] = Services.ModbusIO.ModbusIO(componentName,configurationXml)
+  Model.services[componentName]=Model.modelComponents[componentName]
+#  Model.services[componentName] = Services.ModbusIO.ModbusIO(componentName,configurationXml)
 
 def start(num_worker_threads):
   logger=logging.getLogger("manager")
   Model.components = listAllComponents()
-  createLocks()
-  createState()
+  loadComponents()
   logger.info("Starting model with " + str(num_worker_threads) + " threads...")
   # Start event workers
   for i in range(num_worker_threads):

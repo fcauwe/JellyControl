@@ -9,10 +9,10 @@ eventCount=0
 model = dict()
 
 # Create state
-state = dict()
+modelComponents = dict()
 
 # Create componentList
-components = dict()
+globalComponentsList = dict()
 
 # Create Servicelist
 services = dict()

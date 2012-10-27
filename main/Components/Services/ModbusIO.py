@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 import XmlDict,GlobalObjects
-from Components import Events,Model
+from Components import Events,Component
 from pymodbus.client.sync import ModbusTcpClient
 from pymodbus.exceptions import ConnectionException
 import time
 import logging, logging.config
 
-
-class ModbusIO:
+class ModbusIO(Component.generic):
   Name = "ModbusIO"
   componentName=""
   xmlname=""
@@ -15,7 +14,6 @@ class ModbusIO:
   sourceList = ['Out']
   defaultConfig={}
   defaultState={}
-  defaultInternalState={}
   configuration={}  
   
   modbus_ip=""
@@ -33,6 +31,7 @@ class ModbusIO:
   modbus_write_event=[]
   
   def __init__(self,componentName,xmlname):
+    Component.generic.__init__(self)
     self.configuration=XmlDict.loadXml(xmlname)
     self.xmlname=xmlname
     #self.configuration=XmlDict.loadXml("global.xml")
