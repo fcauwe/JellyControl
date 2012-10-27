@@ -10,7 +10,7 @@
 <div id="workspace">
 </div>
 
-<div id="explanation">
+<!-- <div id="explanation">
  <h1>.Connect</h1>
  <p>Connecting your objects together.</p>
  <p><a onclick=addComp() href=#>Add component</a> </p>
@@ -19,6 +19,27 @@
  <p>Switch workspace: <a onclick=switchWorkspace("default") href=#>default</a> 
                       <a onclick=switchWorkspace("test1") href=#>test1</a> </p>
 </div>
+-->
+<div onclick="addComp()" id="addComp">
++
+</div>
+<div onclick="removeComp()" id="removeComp">
+-
+</div>
+
+
+<div onclick="saveModel()" id="saveModel">
+S
+</div>
+
+<div id="switchWorkspace">
+ Switch workspace: <a onclick=switchWorkspace("default") href=#>default</a> 
+                      <a onclick=switchWorkspace("test1") href=#>test1</a> 
+
+</div>
+
+
+
 
 <script type='text/javascript' src='include/jquery.min.js'></script>
 <script type='text/javascript' src='include/jquery-ui.min.js'></script>
