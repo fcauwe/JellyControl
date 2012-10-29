@@ -54,7 +54,7 @@ filter:alpha(opacity=60);
 }
 
 #addComp{
-  position:absolute;
+  position:fixed;
   top:10px;
   right:15px;
   font-size:30px;
@@ -63,7 +63,7 @@ filter:alpha(opacity=60);
   cursor:pointer;
 }
 #removeComp{
-  position:absolute;
+  position:fixed;
   top:38px;
   right:19px;
   font-size:30px;
@@ -74,9 +74,11 @@ filter:alpha(opacity=60);
 
 
 #saveModel{
-  position:absolute;
-  bottom:10px;
-  right:15px;
+  position:fixed;
+  clear:both;
+  padding:0 10px 10px 0;
+  bottom:0;
+  right:0;
   font-size:30px;
   font-weight:bold;
   color:#888888;
@@ -84,9 +86,10 @@ filter:alpha(opacity=60);
 }
 
 #switchWorkspace{
-  position:absolute;
-  bottom:10px;
-  left:15px;
+  position:fixed;
+  bottom:0px;
+  padding:0 10px 10px 10px;
+  left:0px;
   color:#888888;
 }
 

@@ -24,7 +24,7 @@ img{
 
 #addActor{
   display:none;
-  position:absolute;
+  position:fixed;
   top:10px;
   right:15px;
   font-size:30px;
@@ -35,7 +35,7 @@ img{
 
 #savePanel{
   display:none;
-  position:absolute;
+  position:fixed;
   bottom:10px;
   right:15px;
   font-size:30px;
