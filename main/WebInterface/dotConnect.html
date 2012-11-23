@@ -10,16 +10,6 @@
 <div id="workspace">
 </div>
 
-<!-- <div id="explanation">
- <h1>.Connect</h1>
- <p>Connecting your objects together.</p>
- <p><a onclick=addComp() href=#>Add component</a> </p>
- <p><a onclick=removeComp() href=#>Remove component</a> </p>
- <p><a onclick=saveModel() href=#>Save Model</a> </p>
- <p>Switch workspace: <a onclick=switchWorkspace("default") href=#>default</a> 
-                      <a onclick=switchWorkspace("test1") href=#>test1</a> </p>
-</div>
--->
 <div onclick="addComp()" id="addComp">
 +
 </div>
@@ -33,11 +23,52 @@ S
 </div>
 
 <div id="switchWorkspace">
- Switch workspace: <a onclick=switchWorkspace("default") href=#>default</a> 
-                      <a onclick=switchWorkspace("test1") href=#>test1</a> 
-
+Workspace: 
+<select id="workspaceOption">
+<option>default</option>
+<option>test1</option>
+</select>
+<a href="#" onclick="">+</a> 
 </div>
 
+<div id="dialog-edit" title="Edit actor?">
+
+<form>
+<input type="hidden" id="form-actorname" />
+
+<label for="title">Title: </label>
+<input type="text" id="form-title" class="text ui-widget-content ui-corner-all" /> <br>
+
+<label for="form-source">State source: </label>
+<select id="form-source" class="text ui-widget-content ui-corner-all" > </select><br>
+
+<label for="form-actionlink">Action link: </label>
+<input type="text" id="form-actionlink" class="text ui-widget-content ui-corner-all" /> <br>
+
+<label for="form-actionevent">Action event: </label>
+<select id="form-actionevent" class="text ui-widget-content ui-corner-all" > </select><br>
+
+<label for="email">Style:</label>
+<select id="form-css" class="text ui-widget-content ui-corner-all" >
+ <option value="">none</option>
+ <option value="Button">Simple Button</option>
+ <option value="Button3D">3D Button</option>
+ <option value="ImageActive">Image: Active visible</option>
+ <option value="ImageInactive">Image: Inactive visible</option>
+ <option value="ImageFade">Image: Fade out when inactive</option>
+</select>
+ <br>
+
+<label for="email">Image: </label>
+<input type="text" id="form-image" class="text ui-widget-content ui-corner-all" /> <br>
+
+
+<label for="email">Resizable:</label>
+<input type="checkbox" id="form-resizable" value="1" class="text ui-widget-content ui-corner-all"> <br>
+
+</form>
+
+</div>
 
 
 

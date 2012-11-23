@@ -90,12 +90,24 @@
 
 jsPlumb.bind("ready", function() {
   loadComponentList();
-  loadModel(); 
+  loadModel();
+  loadWorksheetList(); 
   //jsPlumbComponent.init();
   //loadComponents();
   //loadConnections();
 });
 
+
+function loadWorksheetList(){
+  
+  jQuery(document).ready(function(){
+    $("#workspaceOption").change(function() {
+       switchWorkspace($("#workspaceOption").val());
+     })
+  });
+  
+  
+}
 
 function saveModel(){
   updateComponentsPosition();
