@@ -1,8 +1,10 @@
 
 // Define Arrays
 var timeCounter=0;
-var timeCounterMax=40;
+var timeMax=20;
+var timeLastReload=0;
 var timer;
+var timerLoop=500;
 var reloadCounter=0;
 var editMode=false
 var editStateList={};
@@ -80,7 +82,7 @@ function generatePanel(){
   sourceList = sourceList.substr(0,sourceList.length-1);
   state={};
   statePresent=false;
-  timeCounter=timeCounterMax+1;
+  timeLastReload=0; 
   stateForceUpdate=true;
   clearTimeout(timer)
   cycleTimer();
@@ -220,14 +222,14 @@ function updateState(){
   // Define delaytime / forced update
   delayargs=""
   if(!stateForceUpdate)
-    delayargs = "&delay=" + (timeCounterMax/2-2);
+    delayargs = "&delay=" + (timeMax-2);
   
   // Do update
   $.getJSON(getLink + "panel.getState.json?components=" + sourceList + delayargs + "&jsoncallback=?",
     function(data){
       if(!editMode){
         stateForceUpdate=false;
-        timeCounter=timeCounterMax-1;
+        timeLastReload=Math.round(new Date().getTime()/1000)-timeMax+1;
         for (var source in data){
           // First time the state is undefined
           if(typeof(state[source])=='undefined')
@@ -268,10 +270,12 @@ function cycleTimer(){
   
   if (editMode)
     return;
+
   // Update the interface
   timeCounter++;  
-  //if(timeCounter>globalConfig.updateDelay){
-  if(timeCounter>timeCounterMax){
+  currentTime=Math.round(new Date().getTime()/1000);
+  //console.log( timeCounter + " " + currentTime + " " + (timeLastReload+timeMax))
+  if(currentTime>=(timeLastReload+timeMax)){
     updateState();
     timeCounter=0;    
     // reload the page after a while
@@ -279,13 +283,15 @@ function cycleTimer(){
     if(reloadCounter>1000){
        window.location.reload();
     }
+    timeLastReload=Math.round(new Date().getTime()/1000);
   }
   
   // Update progressbar
-  $('#progress').css({ 'width' : Math.round((1 - timeCounter/timeCounterMax)*100) + '%'});
+
+  $('#progress').css({ 'width' : Math.round((1 - timeCounter/(timeMax/(timerLoop/1000)))*100) + '%'});
   
   // Repeat this function every second   
-  timer=setTimeout(cycleTimer,500);
+  timer=setTimeout(cycleTimer,timerLoop);
 }
 
 
