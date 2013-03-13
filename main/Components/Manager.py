@@ -15,12 +15,11 @@ def openModel(filename):
   model=json.loads(myFile.read())
   myFile.close()
   return model
-  
 
 def loadModel(filename):
   logger=logging.getLogger("manager")
   logger.info("Loading model " + filename + "...")
-  Model.model=openModel(filename)
+  Model.model=openModel(filename)["componentList"]
 
 def loadComponents():
   logger=logging.getLogger("manager")

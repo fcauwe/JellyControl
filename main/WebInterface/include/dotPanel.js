@@ -229,7 +229,7 @@ function updateState(){
     function(data){
       if(!editMode){
         stateForceUpdate=false;
-        timeLastReload=Math.round(new Date().getTime()/1000)-timeMax+1;
+        //timeLastReload=Math.round(new Date().getTime()/1000)-timeMax+1;
         for (var source in data){
           // First time the state is undefined
           if(typeof(state[source])=='undefined')

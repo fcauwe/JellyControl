@@ -7,7 +7,8 @@
 #Load Global library's
 import logging
 import string,cgi,time
-from os import curdir, sep
+from time import gmtime, strftime
+import os, os.path
 import BaseHTTPServer
 import base64,json
 ## Redefine address lookup function, to avoid crazy delays
@@ -61,7 +62,7 @@ class WebInterfaceHandler(BaseHTTPRequestHandler):
                     return
 
             if filename.endswith(".html"):
-                f = open(curdir + sep + "WebInterface" + sep + filename) 
+                f = open(os.curdir + os.sep + "WebInterface" + os.sep + filename) 
                 self.send_response(200)
                 self.send_header('Content-type','text/html')
                 self.end_headers()
@@ -70,7 +71,7 @@ class WebInterfaceHandler(BaseHTTPRequestHandler):
                 return
 
             if filename.endswith(".css"):
-                f = open(curdir + sep + "WebInterface" + sep + "include" + sep + filename) 
+                f = open(os.curdir + os.sep + "WebInterface" + os.sep + "include" + os.sep + filename) 
                 self.send_response(200)
                 self.end_headers()
                 self.wfile.write(f.read())
@@ -78,7 +79,7 @@ class WebInterfaceHandler(BaseHTTPRequestHandler):
                 return
 
             if filename.endswith(".png"):
-                f = open(curdir + sep + "WebInterface" + sep + "include" + sep + filename,'rb') 
+                f = open(os.curdir + os.sep + "WebInterface" + os.sep + "include" + os.sep + filename,'rb') 
                 self.send_response(200)
                 self.send_header('Content-type','image/png')
                 self.end_headers()
@@ -87,7 +88,7 @@ class WebInterfaceHandler(BaseHTTPRequestHandler):
                 return
 
             if filename.endswith(".ico"):
-                f = open(curdir + sep + "WebInterface" + sep + "include" + sep + filename,'rb') 
+                f = open(os.curdir + os.sep + "WebInterface" + os.sep + "include" + os.sep + filename,'rb') 
                 self.send_response(200)
                 self.send_header('Content-type','image/x-icon')
                 self.end_headers()
@@ -96,9 +97,20 @@ class WebInterfaceHandler(BaseHTTPRequestHandler):
                 return
 
             if filename.endswith(".js"):
-                f = open(curdir + sep + "WebInterface" + sep + "include" + sep + filename)
+                path_to_file = os.curdir + os.sep + "WebInterface" + os.sep + "include" + os.sep + filename
+                if self.headers.has_key("If-None-Match"):
+                  if (self.headers['If-None-Match']==str(os.path.getmtime(path_to_file))):
+                    self.send_response(304)
+                    self.send_header('Etag',os.path.getmtime(path_to_file))
+                    return
+
+                f = open(path_to_file)
                 self.send_response(200)
+
                 self.send_header('Content-type','application/x-javascript')
+                self.send_header('Last-Modified',strftime("%a, %d %b %Y %H:%M:%S GMT",
+                                                          gmtime(os.path.getmtime(path_to_file))))
+                self.send_header('Etag',os.path.getmtime(path_to_file))
                 self.end_headers()
                 self.wfile.write(f.read())
                 f.close()

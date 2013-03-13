@@ -111,7 +111,10 @@ function loadWorksheetList(){
 
 function saveModel(){
   updateComponentsPosition();
-  var jsonModel = JSON.stringify(componentList);
+  var postModel = {};
+  postModel["componentList"] = componentList;
+  postModel["proxyList"] = proxyList;
+  var jsonModel = JSON.stringify(postModel);
   var jsonDase64Model = Base64.encode(jsonModel);
   var name = prompt("Model name?",modelName);
   var postLink = location.href.substring(0,location.href.lastIndexOf("/")+1);
@@ -132,7 +135,8 @@ function loadModel(){
   var getLink = location.href.substring(0,location.href.lastIndexOf("/")+1);
   $.getJSON(getLink + "connect.openModel.json?name=" + modelName + "&jsoncallback=?",
     function(data){
-      componentList=data;
+      componentList=data["componentList"];
+      proxyList=data["proxyList"];
       document.title = ".Connect: " + modelName;
       //document.getElementById("Title").innerHTML=workspaceName; 
       
@@ -142,6 +146,7 @@ function loadModel(){
       // Restart jsplumb (clean up)
       jsPlumbComponent.init();
       loadComponents();
+      loadProxys();
       loadConnections();
     });
 }    
@@ -167,13 +172,6 @@ function listWorkspaces(){
   return list
 }
 
-
-
-function test2(){
-
-}
-
-
 function addComp(){
   var type = prompt("component type?");
   var name = prompt("Component name?",type);
@@ -181,10 +179,24 @@ function addComp(){
     addComponent(name,type);
 }
 
+function addProx(){
+  var porttype = prompt("Port type?");
+  var component = prompt("Component name?");
+  var port = prompt("Port name?");
+  if ((component!=null)&&(port!=null))
+    addProxy(component,port,porttype);
+}
+
 
 function addComponent(name,type){
   componentList[name] = {"type":type,position:[0,0],workspace:workspaceActive,connections:{}};
   createVisualComponent(name,componentList[name]["type"],componentList[name]["position"]);
+}
+
+function addProxy(component,port,porttype){
+  name = workspaceActive + "-" + component + "-" + port + "-" + porttype
+  proxyList[name] = {position:[0,0],workspace:workspaceActive,"component":component,"port":port,"porttype":porttype};
+  createVisualProxy(name);
 }
 
 function removeComp(){
@@ -224,10 +236,13 @@ function switchWorkspace(name){
   jsPlumbComponent.init();
   workspaceActive=name;
   loadComponents();
+  loadProxys();
   loadConnections();
 } 
 
 function createVisualComponent(name, type, position){   
+  //TODO: Check if type exists
+
   // define variables 
   var divname = "comp-" + name;
   var sinks = componentType[type]["sinks"];
@@ -281,11 +296,67 @@ function createVisualComponent(name, type, position){
   }
 }
 
+
+function createVisualProxy(name){   
+  // define variables 
+  var divname = "proxy-" + proxyList[name]["component"] + "-" + proxyList[name]["porttype"] 
+                +"-"+ proxyList[name]["port"] ;
+  var position = proxyList[name]["position"] 
+  var type = name
+  var smalltype = name
+
+  $('#workspace').append("<div class='proxy' id='" + divname + "'>"
+                       + "<strong>" +  proxyList[name]["component"] 
+                       + "</strong><br><small>[<em><span title='proxy'>proxy</span></em>]</small></div>");
+  
+  // resize div to fitt connection 
+  $("#"+divname).height(45);
+  
+  // Set the right position
+  $("#"+divname).css({"top": position[1]+"px", "left": position[0]+"px"}); 
+  
+  // Make the div draggable
+  jsPlumb.draggable(jsPlumb.getSelector("#"+divname));
+
+  // Add sinks
+  if ( proxyList[name]["porttype"] == "sink" ) {
+      sinks=proxyList[name]["port"];
+      var UUID = "comp-" + proxyList[name]["component"] + "-sink-" + sinks;
+      jsPlumb.addEndpoint(divname, sinkEndpoint, {anchor:[0,0.5,-1,0], 
+						  uuid:UUID, 
+						  overlays:[["Label", {location:[0.5,-0.6], 
+								       label:sinks, 
+								       cssClass:"endpointSinkLabel"}]]
+						 });
+  }
+   
+  // Add source
+  if ( proxyList[name]["porttype"] == "source" ) {
+      sources=proxyList[name]["port"]
+      var UUID = "comp-" + proxyList[name]["component"] + "-source-" + sources;
+      jsPlumb.addEndpoint(divname, sourceEndpoint, {anchor:[1,0.5,1,0], 
+						  uuid:UUID, 
+						  overlays:[["Label", {location:[0.5,-0.6], 
+								       label:sources, 
+								       cssClass:"endpointSourceLabel"}]]
+						 });
+  }
+}
+
 function loadComponents (){
   for (var comp in componentList ){
     // Check if component is listed in current workspace
     if(componentList[comp]["workspace"]==workspaceActive){ 
       createVisualComponent(comp,componentList[comp]["type"],componentList[comp]["position"]);
+    }
+  }
+}
+
+function loadProxys (){
+  for (var proxy in proxyList ){
+    // Check if component is listed in current workspace
+    if(proxyList[proxy]["workspace"]==workspaceActive){ 
+      createVisualProxy(proxy);
     }
   }
 }
@@ -315,8 +386,18 @@ function updateComponentsPosition (){
       componentList[comp]["position"]=[position.left,position.top];
     }
   }
-}
 
+  for (var proxy in proxyList ){
+    // Check if component is listed in current workspace
+    if(proxyList[proxy]["workspace"]==workspaceActive){ 
+      var divname = "#proxy-" + proxyList[proxy]["component"] + "-" + proxyList[proxy]["porttype"] 
+                +"-"+ proxyList[proxy]["port"] ;
+      var position=$(divname).position();
+      proxyList[proxy]["position"]=[position.left,position.top];
+    }
+  }
+
+}
 
 var componentType = {};
 var componentTypeExtra = { Input:{sinks:[],sources:["In1OnChange","In2OnChange","In3OnChange","In4OnChange"]},
