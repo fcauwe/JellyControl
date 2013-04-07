@@ -106,7 +106,10 @@ def componentStateVersion(components):
 
 
 def addService(componentType,componentName,configurationXml):
-  Model.modelComponents[componentName] = Services.ModbusIO.ModbusIO(componentName,configurationXml)
+  if (componentType=="ModbusIOClient"):
+    Model.modelComponents[componentName] = Services.ModbusIO.ModbusIO(componentName,configurationXml)
+  elif  (componentType=="RFID"):
+    Model.modelComponents[componentName] = Services.RFID.RFID(componentName,configurationXml)
   Model.services[componentName]=Model.modelComponents[componentName]
 #  Model.services[componentName] = Services.ModbusIO.ModbusIO(componentName,configurationXml)
 
