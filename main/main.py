@@ -43,7 +43,8 @@ def main():
   
   # Loading model and start worker threads
   Components.Manager.loadModel("config/" + GlobalObjects.config_model["filename"])     
-  Components.Manager.addService("ModbusIOClient","MobusIOMain","config/io.xml")
+  Components.Manager.addService("ModbusIOClient","ModbusIOMain","config/io.xml")
+  Components.Manager.addService("RFID","RFIDMain","config/rfid.xml")
 
 
   Components.Manager.start(2) 
