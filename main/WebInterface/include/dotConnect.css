@@ -83,15 +83,32 @@ filter:alpha(opacity=60);
 	filter:alpha(opacity=80);
 }
 
+.ui-state-focus{
+  border: none !important;
+}
+
+.ui-state-active{
+  border: none !important;
+}
+
+.ui-menu{
+  border: none !important;
+}
+
 #addComp{
-  position:fixed;
-  top:10px;
-  right:15px;
   font-size:30px;
   font-weight:bold;
   color:#888888;
+}
+#addComp-menu{
+  border:0px;
+  position:fixed;
+  top:10px;
+  right:-15px;
   cursor:pointer;
 }
+
+
 #removeComp{
   position:fixed;
   top:38px;

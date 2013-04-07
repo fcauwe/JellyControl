@@ -57,23 +57,23 @@ img{
 .actorImageFade {
 }
 
-.actorImageFade .actorValue{
+.actorImageFade .actorInsideValue{
   display:none;
 }
 
-.actorImageFade .actorTitle{
+.actorImageFade .actorInsideTitle{
   overflow: hidden;
   text-align: left;
   width:100%;
 }
 
-.actorImageFadeFalse .actorImage {
+.actorImageFadeFalse .actorInsideImage {
   filter:alpha(opacity=30);
   -moz-opacity:0.3;
   -khtml-opacity: 0.3;
   opacity: 0.3;
 }
-.actorImageFadeTrue .actorImage {
+.actorImageFadeTrue .actorInsideImage {
   filter:alpha(opacity=100);
   -moz-opacity:1.0;
   -khtml-opacity: 1.0;
@@ -85,20 +85,20 @@ img{
 .actorImageInactive {
 }
 
-.actorImageInactive .actorValue{
+.actorImageInactive .actorInsideValue{
   display:none;
 }
 
-.actorImageInactive .actorTitle{
+.actorImageInactive .actorInsideTitle{
   overflow: hidden;
   text-align: left;
   width:100%;
 }
 
-.actorImageInactiveFalse .actorImage {
+.actorImageInactiveFalse .actorInsideImage {
   display:block;
 }
-.actorImageInactiveTrue .actorImage {
+.actorImageInactiveTrue .actorInsideImage {
   display:none;
 }
 
@@ -106,46 +106,40 @@ img{
 .actorImageActive {
 }
 
-.actorImageActive .actorValue{
+.actorImageActive .actorInsideValue{
   display:none;
 }
 
-.actorImageActive .actorTitle{
+.actorImageActive .actorInsideTitle{
   overflow: hidden;
   text-align: left;
   width:100%;
 }
 
-.actorImageActiveFalse .actorImage {
+.actorImageActiveFalse .actorInsideImage {
   display:none;
 }
-.actorImageActiveTrue .actorImage {
+.actorImageActiveTrue .actorInsideImage {
   display:block;
 }
 
-.actorButton .actorValue{
+.actorButton .actorInsideValue{display:none;}
+.actorButton .actorInsideTitle{overflow:hidden; text-align:center; width:100%;}
+.actorButtonTrue {background-color: #00FF00;}
+.actorButtonFalse {background-color: #FF0000;}
+
+.actorValue .actorInsideValue{width:50%;}
+.actorValue .actorInsideTitle{overflow:hidden; text-align:center; width:50%;}
+/*.actorButtonTrue {background-color: #00FF00;}*/
+/*.actorButtonFalse {background-color: #FF0000;}*/
+
+
+
+.actorButton3D .actorInsideValue{
   display:none;
 }
 
-.actorButton .actorTitle{
-  overflow: hidden;
-  text-align: center;
-  width:100%;
-}
-
-.actorButtonTrue {
-  background-color: #00FF00;
-}
-
-.actorButtonFalse {
-  background-color: #FF0000;
-}
-
-.actorButton3D .actorValue{
-  display:none;
-}
-
-.actorButton3D .actorTitle{
+.actorButton3D .actorInsideTitle{
   overflow: hidden;
   width:100%;
   height:100%
@@ -212,19 +206,13 @@ img{
 }
 
 .actorButton3DTrue:hover {
-
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #8cb82b), color-stop(1, #9dce2c) );
-
 	background:-moz-linear-gradient( center top, #8cb82b 5%, #9dce2c 100% );
-
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#8cb82b', endColorstr='#9dce2c');
-
 	background-color:#8cb82b;
 
 }.actorButton3DTrue:active {
-
 	position:relative;
-
 	top:1px;
 
 }
@@ -234,59 +222,34 @@ img{
 .actorButton3DFalse {
 
 	-moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
-
 	-webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
-
 	box-shadow:inset 0px 1px 0px 0px #f5978e;
-
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
-
 	background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
-
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
-
 	background-color:#f24537;
-
 	-moz-border-radius:6px;
-
 	-webkit-border-radius:6px;
-
 	border-radius:6px;
-
 	border:1px solid #d02718;
-
 	display:inline-block;
-
 	color:#ffffff;
-
 	font-family:arial;
-
 	font-size:15px;
-
 	font-weight:bold;
-
 	padding:6px 24px;
-
 	text-decoration:none;
-
 	text-shadow:1px 1px 0px #810e05;
 
 }.actorButton3DFalse:hover {
-
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
-
 	background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
-
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
-
 	background-color:#c62d1f;
 
 }.actorButton3DFalse:active {
-
 	position:relative;
-
 	top:1px;
-
 }
 
 

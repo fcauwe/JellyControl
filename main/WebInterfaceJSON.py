@@ -66,7 +66,7 @@ def Process(filename,args):
         components=args["components"].split(",")
         ## If a delay as been set, send state after the delay or when something changed
         if(args.has_key("delay")):
-          refreshRate=0.3
+          refreshRate=0.1
           delay=float(args["delay"])
           if(delay>60):
             delay=60

@@ -89,6 +89,7 @@
 
 
 jsPlumb.bind("ready", function() {
+  $( "#addmenu" ).menu({ position: { my: "right top", at: "left bottom" } });
   loadComponentList();
   loadModel();
   loadWorksheetList(); 
@@ -180,7 +181,7 @@ function addComp(){
 }
 
 function addProx(){
-  var porttype = prompt("Port type?");
+  var porttype = prompt("Port type (source/sink)?");
   var component = prompt("Component name?");
   var port = prompt("Port name?");
   if ((component!=null)&&(port!=null))

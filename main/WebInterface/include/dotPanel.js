@@ -3,6 +3,7 @@
 var timeCounter=0;
 var timeMax=20;
 var timeLastReload=0;
+var updateinprogress=false;
 var timer;
 var timerLoop=500;
 var reloadCounter=0;
@@ -17,6 +18,7 @@ var statePresent=false;
 var stateForceDirectUpdate=true
 var panelClass="panelBack";
 var panelName;
+var jsonreq;
 
 function compareObject(x,y)
 {
@@ -93,7 +95,7 @@ function generatePanel(){
 function updateActor(name,data){
   
   // update value
-  $('#' + name).find(".actorValue").text(data.value);
+  $('#' + name).find(".actorInsideValue").text(data.value);
   
   // assign CSS
   var css="actor" + actorList[name].css;
@@ -106,12 +108,12 @@ function updateActor(name,data){
 
 function createVisualActor(actor){
   // Create actor
-  var content = "<div id='" + actor + "'><span class='actorTitle'></span>";
-  content += "<span class='actorValue'></span></div>";
+  var content = "<div id='" + actor + "'><span class='actorInsideTitle'></span>";
+  content += "<span class='actorInsideValue'></span></div>";
   $('#content').append(content);
   
   // set Title  
-  $('#' + actor).find(".actorTitle").text(actorList[actor].title)
+  $('#' + actor).find(".actorInsideTitle").text(actorList[actor].title)
 
   // Set Position
   if(actorList[actor].position[0]!=0){
@@ -133,7 +135,7 @@ function createVisualActor(actor){
   
   // Add image
   if((actorList[actor].image!="") && (actorList[actor].image!=null)){
-    $("#" + actor).prepend("<img class='actorImage' src='" + actorList[actor].image  + "'>");
+    $("#" + actor).prepend("<img class='actorInsideImage' src='" + actorList[actor].image  + "'>");
     
   }
   
@@ -218,6 +220,9 @@ function deleteActor(){
 }
 
 function updateState(){
+  timeCounter=0;    
+  timeLastReload=Math.round(new Date().getTime()/1000);
+  
   var getLink = location.href.substring(0,location.href.lastIndexOf("/")+1);
   // Define delaytime / forced update
   delayargs=""
@@ -225,7 +230,9 @@ function updateState(){
     delayargs = "&delay=" + (timeMax-2);
   
   // Do update
-  $.getJSON(getLink + "panel.getState.json?components=" + sourceList + delayargs + "&jsoncallback=?",
+  if (typeof(jsonreq)=="object")
+    jsonreq.abort()
+  jsonreq=$.getJSON(getLink + "panel.getState.json?components=" + sourceList + delayargs + "&jsoncallback=?",
     function(data){
       if(!editMode){
         stateForceUpdate=false;
@@ -240,9 +247,10 @@ function updateState(){
               updateActor(sourceMap[source][i],data[source])
           }
         }
+        state=data; 
+        updateState()
       }
       // copy new state to variable
-      state=data; 
     })
   
   // Display panel
@@ -277,7 +285,6 @@ function cycleTimer(){
   //console.log( timeCounter + " " + currentTime + " " + (timeLastReload+timeMax))
   if(currentTime>=(timeLastReload+timeMax)){
     updateState();
-    timeCounter=0;    
     // reload the page after a while
     reloadCounter++;
     if(reloadCounter>1000){
