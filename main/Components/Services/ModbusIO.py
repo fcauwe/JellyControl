@@ -206,5 +206,6 @@ class ModbusIO(Component.generic):
       else:
          logger.warning("Lost connection to modbus module.")
          self.state_write_changed=True 
+         time.sleep(1)
 
 
