@@ -1,91 +1,36 @@
-#import blocks,events
+from Components import Component
 import time
-from Components import Events,Model
-## ObjectName,eventName,eventValue 
+from threading import Timer
 
-class DelayOn1Sec:
-  Name = "DelayOn1Sec"
+class DelayOn(Component.generic):
+  Name = 'DelayOn'
   sinkList = ['In']
   sourceList = ['Out']
-  visibleState=[]
-  defaultConfig={}
-  defaultState={}
-  defaultInternalState={'value':False}
-  @staticmethod
-  def catchEvent(component,event,value):
-    if (event=="In"):
-      if(value["value"]==True):
-        Model.intstate[component]["value"]=True
-        time.sleep(1)
-        Events.generateTarget(component,"Trigger",{'value':True})
-      else:
-        Model.intstate[component]["value"]=False
-        Events.generate(component,"Out",{'value':False})
-    elif (event=="Trigger"):
-      if (Model.state[component]["value"]):
-        Events.generate(component,"Out",{'value':True})
-      
+  defaultState={'value':False}
+  defaultConfig={'delay':1}
+  newvalue=False
+  timer_running=False
 
-class DelayOff1Sec:
-  Name = "DelayOff1Sec"
-  sinkList = ['In']
-  sourceList = ['Out']
-  visibleState=[]
-  defaultConfig={}
-  defaultState={}
-  defaultInternalState={'value':False}
-  @staticmethod
-  def catchEvent(component,event,value):
-    if (event=="In"):
-      if(value["value"]==False):
-        Model.intstate[component]["value"]=False
-        time.sleep(1)
-        Events.generateTarget(component,"Trigger",{'value':False})
-      else:
-        Model.intstate[component]["value"]=True
-        Events.generate(component,"Out",{'value':True})
-    elif (event=="Trigger"):
-      if (Model.state[component]["value"]):
-        Events.generate(component,"Out",{'value':False})
-      
+  def __init__(self,compid):
+    Component.generic.__init__(self,compid)
 
+  def catchEvent(self,event,value):
+    if (value['value']==True):
+      #create a timer
+      self.timer_running=True
+      self.t = Timer(float(self.getConfigVariable("delay")), self.timerFinished)
+      self.t.start()
+    else:
+      #Cancel timer
+      if(self.timer_running):
+        t.cancel()
+      #send event
+      self.setStateVariable('value',False)
+      self.generateEvent('Out',{'value':False})
 
-
-
-class DoubleClick:
-  Name = "DoubleClick"
-  sinkList = ['In']
-  sourceList = ['Out1Click','Out2Click','OutLong']
-  visibleState=[]
-  defaultConfig={}
-  defaultState={}
-  defaultInternalState={'state':False,'time':0,'clicks':0}
-  @staticmethod
-  def catchEvent(component,event,value):
-    if (event=="In"):
-      if(value["value"]==True):
-        Model.instate[component]["clicks"]=Model.instate[component]["clicks"]+1
-      
-      Model.instate[component]["time"]=0
-
-      if(Model.intstate[component]["state"]==False):
-        time.sleep(0.1)
-        Model.intstate[component]["state"]=True
-        Events.generateTarget(component,"Trigger",{'value':True})
-
-    elif (event=="Trigger"):
-      if(int(Model.instate[component]["time"])<3):
-        time.sleep(0.1)
-        Model.instate[component]["time"]=int(Model.instate[component]["time"])+1 
-        Events.generateTarget(component,"Trigger",{'value':True})
-      else:
-        
-        Events.generate(component,"Out",{'value':True})
-
-        Model.instate[component]["time"]=0
-        Model.instate[component]["state"]=False
-        Model.instate[component]["clicks"]=0
-
-
+  def timerFinished(self):
+    self.timer_running=False
+    self.setStateVariable('value',True)
+    self.generateEvent('Out',{'value':True})
 
 
