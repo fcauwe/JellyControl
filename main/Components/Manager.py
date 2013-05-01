@@ -24,15 +24,17 @@ def loadModel(filename):
 def loadComponents():
   logger=logging.getLogger("manager")
   #Model.modelComponents = dict()
-  for name in Model.model.keys():
-    componentPath=Model.model[name]["type"].split('.')
+  for componentId in Model.model.keys():
+    componentPath=Model.model[componentId]["type"].split('.')
     if(componentPath[0]!='service'):
       try:
         component=getattr(getattr(Factory,componentPath[0]),componentPath[1]) 
-        Model.modelComponents[name]=component()
+        Model.modelComponents[componentId]=component(componentId)
+        if(Model.model[componentId].has_key("config")):
+          Model.modelComponents[componentId].setConfig(Model.model[componentId]["config"])
       except Exception, e:
         tb = traceback.extract_tb(sys.exc_info()[2])[-1]      
-        logger.error("Could not load component " + name + " / " + Model.model[name]["type"] + ": "
+        logger.error("Could not load component " + componentId + " / " + Model.model[componentId]["type"] + ": "
                       + e.message + " (" +os.path.basename(tb[0]) + ":" + str(tb[1])+ ").")
         continue
 
@@ -46,7 +48,7 @@ def processEvent():
     event = Model.eventQueue.get()
     logger.info("Processing event " + str(event))
     try:
-      Model.modelComponents[event[0]].catchEventThreadSafe(event[0],event[1],event[2]) 
+      Model.modelComponents[event[0]].catchEventThreadSafe(event[1],event[2]) 
     except Exception, e:  
       tb = traceback.extract_tb(sys.exc_info()[2])[-1]      
       logger.error("Could not execute " + event[0] + " (" + event[1] + "): "
@@ -67,13 +69,15 @@ def listAllComponents():
           if(type(componentObject)==type(Component.generic)):
             if(issubclass(componentObject,Component.generic)):
               componentList[module + "." + component]={'sources':componentObject.sourceList,
-                                                       'sinks':componentObject.sinkList}
+                                                       'sinks':componentObject.sinkList,
+                                                       'config':componentObject.defaultConfig}
         except Exception, e:
           logger.error("Could not inspect " + component + ": " + e.message)
           continue
   for module in Model.services:
      componentList["service." + module] = {'sources':Model.services[module].sourceList,
-                                            'sinks':Model.services[module].sinkList}
+                                           'sinks':Model.services[module].sinkList,
+                                           'config':Model.services[module].defaultConfig}
   return componentList
 
 

@@ -39,40 +39,17 @@ Workspace:
 <a href="#" onclick="alert('not implemented')">+</a> 
 </div>
 
-<div id="dialog-edit" title="Edit actor?">
+<div id="dialog-edit" title="Edit Component?">
 
 <form>
-<input type="hidden" id="form-actorname" />
+<input type="hidden" id="form-name" >
+<strong>Type:</strong><br> <em><span id="form-type"></span></em><br><br>
+<strong>Properties:</strong><br>
+<div id="form-properties">
+<table border="0">
+</table> 
+</div>
 
-<label for="title">Title: </label>
-<input type="text" id="form-title" class="text ui-widget-content ui-corner-all" /> <br>
-
-<label for="form-source">State source: </label>
-<select id="form-source" class="text ui-widget-content ui-corner-all" > </select><br>
-
-<label for="form-actionlink">Action link: </label>
-<input type="text" id="form-actionlink" class="text ui-widget-content ui-corner-all" /> <br>
-
-<label for="form-actionevent">Action event: </label>
-<select id="form-actionevent" class="text ui-widget-content ui-corner-all" > </select><br>
-
-<label for="email">Style:</label>
-<select id="form-css" class="text ui-widget-content ui-corner-all" >
- <option value="">none</option>
- <option value="Button">Simple Button</option>
- <option value="Button3D">3D Button</option>
- <option value="ImageActive">Image: Active visible</option>
- <option value="ImageInactive">Image: Inactive visible</option>
- <option value="ImageFade">Image: Fade out when inactive</option>
-</select>
- <br>
-
-<label for="email">Image: </label>
-<input type="text" id="form-image" class="text ui-widget-content ui-corner-all" /> <br>
-
-
-<label for="email">Resizable:</label>
-<input type="checkbox" id="form-resizable" value="1" class="text ui-widget-content ui-corner-all"> <br>
 
 </form>
 

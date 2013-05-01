@@ -90,13 +90,64 @@
 
 jsPlumb.bind("ready", function() {
   $( "#addmenu" ).menu({ position: { my: "right top", at: "left bottom" } });
+  $( "#dialog-edit" ).dialog({
+                              autoOpen:false,
+                              resizable: false,
+                              modal: true,
+                              width: 450,
+                              buttons: {
+                                "Apply": function(){editChangeComponent();$(this).dialog("close");},
+                                "Delete": function() {removeComp();$(this).dialog("close");},
+                                "Cancel": function() {$(this).dialog("close");}
+                              }
+                      }); 
   loadComponentList();
   loadModel();
   loadWorksheetList(); 
-  //jsPlumbComponent.init();
+
+ //jsPlumbComponent.init();
   //loadComponents();
   //loadConnections();
 });
+
+function editComponent(component){
+  // set name
+  $("#form-name").val(component);
+  var componentTypeEdit=componentList[component].type;
+  $("#form-type").html(componentTypeEdit);
+  var tablehtml = "<table border='0'>";
+  var count = 0;
+  for (var config in componentType[componentTypeEdit].config ){
+    var value = componentType[componentTypeEdit].config[config];
+    if ("config" in componentList[component]){
+      if (config in componentList[component]["config"]){
+        value = componentList[component]["config"][config];
+      }
+    }
+    tablehtml += "<tr><td>" + config + ":</td>";
+    tablehtml += "<td><input id='form-config-" + config + "' value='" + value + "' ></td></tr>";
+    count++;
+  }
+  tablehtml += "</table>";
+
+  if (count==0){tablehtml = "(none)";}
+ 
+  $("#form-properties").html(tablehtml);
+  $("#dialog-edit" ).dialog( "open" );
+  $("#dialog-edit" ).dialog( "option","title", "Edit component '" + component + "'?" )
+} 
+
+function editChangeComponent(component){
+  // set name
+  component = $("#form-name").val();
+  var componentTypeEdit=componentList[component].type;
+  if (!("config" in componentList[component])){ componentList[component]["config"]={}; }
+
+  for (var config in componentType[componentTypeEdit].config ){
+    componentList[component]["config"][config]= $("#form-config-" + config).val();
+  }
+}
+
 
 
 function loadWorksheetList(){
@@ -149,6 +200,9 @@ function loadModel(){
       loadComponents();
       loadProxys();
       loadConnections();
+
+
+
     });
 }    
 
@@ -201,7 +255,8 @@ function addProxy(component,port,porttype){
 }
 
 function removeComp(){
-  var name = prompt("component name?");
+  //var name = prompt("component name?");
+  var name=$("#form-name").val();
   if (name!="")
     removeComponent(name);
 
@@ -295,6 +350,8 @@ function createVisualComponent(name, type, position){
 								       cssClass:"endpointSourceLabel"}]]
 						 });
   }
+  // Make component editable
+  $('#' + divname).dblclick(function(){editComponent(name);})
 }
 
 
@@ -401,8 +458,7 @@ function updateComponentsPosition (){
 }
 
 var componentType = {};
-var componentTypeExtra = { Input:{sinks:[],sources:["In1OnChange","In2OnChange","In3OnChange","In4OnChange"]},
-                      Output:{sinks:["Out1","Out2","Out3","Out4"],sources:[]}};
+var componentTypeExtra = {};
 
 var componentList =  {};
 var modelName="default";
