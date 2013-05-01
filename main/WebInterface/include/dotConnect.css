@@ -140,4 +140,10 @@ filter:alpha(opacity=60);
   color:#888888;
 }
 
+#form-properties{
 
+width:100%;
+height:175px;
+overflow:auto;
+
+}
