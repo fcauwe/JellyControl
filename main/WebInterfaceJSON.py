@@ -15,15 +15,7 @@ from Components import Events,Manager,Model
 def Process(filename,args):
     logger = logging.getLogger("WebInterface")
     
-    if filename == "car.json":
-        json_response = {'present': "str(GlobalObjects.car_data.carPresent())",
-                         'knr': "GlobalObjects.car_data.getKNR()",
-                         'vin': "GlobalObjects.car_data.getVIN()",
-                         'in': "GlobalObjects.sensor_input1"}
-    elif filename == "test.json":
-        json_response={"test":"GlobalObjects.car_tests"}
-
-    elif filename == "config.json":
+    if filename == "config.json":
         json_response=GlobalObjects.config_webinterface
         
     elif filename == "shutdown.json":
