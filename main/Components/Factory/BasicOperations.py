@@ -1,20 +1,21 @@
-from Components import Events,Component
+from Components import Component
 
 class RisingEdge(Component.generic):
   Name = 'RisingEdge'
   sinkList = ['In']
   sourceList = ['Out']
   defaultState={'value':False}
+  defaultConfig={}
 
-  def __init__(self):
-    Component.generic.__init__(self)
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
 
-  def catchEvent(self,component,event,value):
+  def catchEvent(self,event,value):
     if (event=='In'):
       if((value['value']==True) and (self.getStateVariable('value')==False)):
-        Events.generate(component,'Out',{'value':True})
+        self.generateEvent('Out',{'value':True})
       else:
-        Events.generate(component,'Out',{'value':False})
+        self.generateEvent('Out',{'value':False})
       self.setStateVariable('value',value['value'])
 
 
@@ -23,11 +24,12 @@ class SetReset(Component.generic):
   sinkList = ['Set','Reset','Toggle']
   sourceList = ['Out']
   defaultState={'value':False}
+  defaultConfig={}
  
-  def __init__(self):
-    Component.generic.__init__(self)
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
 
-  def catchEvent(self,component,event,value):
+  def catchEvent(self,event,value):
     if (value['value']==True):
       if (event=='Set'):
         result=True
@@ -37,20 +39,21 @@ class SetReset(Component.generic):
         result=not self.getStateVariable('value')
       if (result != self.getStateVariable('value')):
         self.setStateVariable('value',result)
-        Events.generate(component,'Out',{'value':result})
+        self.generateEvent('Out',{'value':result})
 
 class AndPort(Component.generic):
   Name = 'AndPort'
   sinkList = ['In1','In2']
   sourceList = ['Out']
   defaultState={'value':False}
+  defaultConfig={}
 
-  def __init__(self):
-    Component.generic.__init__(self)
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
     self.in1=False
     self.in2=False
   
-  def catchEvent(self,component,event,value):
+  def catchEvent(self,event,value):
     if (event=='In1'):
       self.in1=bool(value['value'])
     elif(event=='In2'):
@@ -60,20 +63,21 @@ class AndPort(Component.generic):
  
     if (result != self.getStateVariable('value')):
       self.setStateVariable('value',result)
-      Events.generate(component,'Out',{'value':result})
+      self.generateEvent('Out',{'value':result})
 
 class OrPort(Component.generic):
   Name = 'OrPort'
   sinkList = ['In1','In2']
   sourceList = ['Out']
   defaultState={'value':False}
+  defaultConfig={}
 
-  def __init__(self):
-    Component.generic.__init__(self)
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
     self.in1=False
     self.in2=False
   
-  def catchEvent(self,component,event,value):
+  def catchEvent(self,event,value):
     if (event=='In1'):
       self.in1=bool(value['value'])
     elif(event=='In2'):
@@ -83,39 +87,41 @@ class OrPort(Component.generic):
    
     if (result != self.getStateVariable('value')):
       self.setStateVariable('value',result)
-      Events.generate(component,'Out',{'value':result})
+      self.generateEvent('Out',{'value':result})
 
 class NotPort(Component.generic):
   Name = 'NotPort'
   sinkList = ['In']
   sourceList = ['Out']
   defaultState={'value':False}
+  defaultConfig={}
  
-  def __init__(self):
-    Component.generic.__init__(self)
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
   
-  def catchEvent(self,component,event,value):
+  def catchEvent(self,event,value):
     result = not bool(value['value'])
 
     if (result != self.getStateVariable('value')):
       self.setStateVariable('value',result)
-      Events.generate(component,'Out',{'value':result})
+      self.generateEvent('Out',{'value':result})
 
 class ProxyPort(Component.generic):
   Name = 'ProxyPort'
   sinkList = ['In']
   sourceList = ['Out']
   defaultState={'value':False}
+  defaultConfig={}
 
-  def __init__(self):
-    Component.generic.__init__(self)
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
   
-  def catchEvent(self,component,event,value):
-    result = bool(value['value'])
+  def catchEvent(self,event,value):
+    result = value['value']
 
     if (result != self.getStateVariable('value')):
       self.setStateVariable('value',result)
-      Events.generate(component,'Out',{'value':result})
+      self.generateEvent('Out',{'value':result})
 
  
 

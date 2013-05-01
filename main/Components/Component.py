@@ -1,7 +1,10 @@
 import threading,sys,traceback,os.path,logging
+import Events
 
 class generic:
-   def __init__(self):
+   componentId=""
+   def __init__(self,compid):
+     self.componentId=compid
      if (hasattr(self, 'defaultState')):
        self.state = self.defaultState.copy()
      else:
@@ -29,15 +32,21 @@ class generic:
    def getConfig(self):
      return self.config.copy()
    def setConfig(self,config):
-     self.config = config
+     self.config = config.copy()
    def getConfigVariable(self,name):
      return self.config[name]
    def setConfigVariable(self,name,value):
      self.config[name]=value
-   def catchEventThreadSafe(self,component,event,value):
+   def init(self):
+     if(hasattr(self,"do_init")):
+       self.do_init()
+   def generateEvent(self,port,value):
+     Events.generate(self.componentId,port,value)
+
+   def catchEventThreadSafe(self,event,value):
      self.lock.acquire()
      try:
-       self.catchEvent(component,event,value)
+       self.catchEvent(event,value)
      except Exception, e:
        tb = traceback.extract_tb(sys.exc_info()[2])[-1] 
        self.logger.error("Component " + self.Name + " (" + event + " / " + str(value) + ") terminated: " + e.message 

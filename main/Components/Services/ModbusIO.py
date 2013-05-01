@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import XmlDict,GlobalObjects
-from Components import Events,Component
+from Components import Component
 from pymodbus.client.sync import ModbusTcpClient
 from pymodbus.exceptions import ConnectionException
 import time
@@ -8,7 +8,6 @@ import logging, logging.config
 
 class ModbusIO(Component.generic):
   Name = "ModbusIO"
-  componentName=""
   xmlname=""
   sinkList = ['In']
   sourceList = ['Out']
@@ -30,12 +29,11 @@ class ModbusIO(Component.generic):
   modbus_write_image=[]
   modbus_write_event=[]
   
-  def __init__(self,componentName,xmlname):
-    Component.generic.__init__(self)
+  def __init__(self,componentId,xmlname):
+    Component.generic.__init__(self,componentId)
     self.configuration=XmlDict.loadXml(xmlname)
     self.xmlname=xmlname
     #self.configuration=XmlDict.loadXml("global.xml")
-    self.componentName = componentName
     # Load Configuration for reading (input)
     self.modbus_ip=self.configuration["ip"];
     self.modbus_period=1/float(self.configuration["update_frequency"])
@@ -129,7 +127,7 @@ class ModbusIO(Component.generic):
       # end if
       self.sinkList = self.modbus_write_event
 
-  def catchEvent(self,component,event,value):
+  def catchEvent(self,event,value):
     logger=logging.getLogger("service")
     if (self.modbus_write_dict.has_key(event)):
       if(self.modbus_write_dict[event]["type"]=="D"):
@@ -151,7 +149,7 @@ class ModbusIO(Component.generic):
     # Connect the client
     self.client = ModbusTcpClient(self.modbus_ip)
     logger=logging.getLogger("service")
-    logger.info("Starting Service: " + self.componentName + " (ModbusIO: " + self.xmlname + ").")
+    logger.info("Starting Service: " + self.componentId + " (ModbusIO: " + self.xmlname + ").")
     while (GlobalObjects.running):
      
       if(self.client.connect()):
@@ -186,7 +184,7 @@ class ModbusIO(Component.generic):
                 if((changed >> j) & 1):
                   # Generate event
                   eventName=self.configuration["input"]["adres_definition"]["adres"][i]["event_" + str(j)]
-                  Events.generate(self.componentName,eventName,{'value':((state_read_new[i]>>j) & 1)})
+                  self.generateEvent(eventName,{'value':((state_read_new[i]>>j) & 1)})
                   #print str(time.time()) + " " + str(i) + "." + str(j) + ": " + str((state_read_new[i]>>j) & 1)
               ## Save the new state
               self.state_read_old[i]=state_read_new[i]
@@ -197,7 +195,7 @@ class ModbusIO(Component.generic):
                 # Generate event
                 eventName=self.configuration["input"]["adres_definition"]["adres"][i]["event"]
                 value = float(state_read_new[i]) / self.modbus_read_analog_scale[i]
-                Events.generate(self.componentName,eventName,{'value':value})
+                self.generateEvent(self.componentId,eventName,{'value':value})
                 #print str(i) + ": " + str(value)
  
                 ## Save new state
