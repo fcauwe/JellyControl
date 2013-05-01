@@ -23,7 +23,7 @@ class DelayOn(Component.generic):
     else:
       #Cancel timer
       if(self.timer_running):
-        t.cancel()
+        self.t.cancel()
       #send event
       self.setStateVariable('value',False)
       self.generateEvent('Out',{'value':False})
