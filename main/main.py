@@ -34,30 +34,40 @@ def launch_web_interface():
 
  
 def main():
-  logging.config.fileConfig("config/logger.conf")
-  global logger
-  logger=logging.getLogger("main")
   
-  # Loading global configuration
-  load_config()
+    GlobalObjects.running = True
+    logging.config.fileConfig("config/logger.conf")
+    global logger
+    logger=logging.getLogger("main")
   
-  # Loading model and start worker threads
-  Components.Manager.loadModel("config/" + GlobalObjects.config_model["filename"])     
-  Components.Manager.addService("ModbusIOClient","ModbusIOMain","config/io.xml")
-  Components.Manager.addService("RFID","RFIDMain","config/rfid.xml")
+    # Loading global configuration
+    load_config()
+  
+    # Loading model and start worker threads
+    Components.Manager.loadModel("config/" + GlobalObjects.config_model["filename"])     
+    Components.Manager.addService("ModbusIOClient","ModbusIOMain","config/io.xml")
+    Components.Manager.addService("RFID","RFIDMain","config/rfid.xml")
 
 
-  Components.Manager.start(2) 
+    Components.Manager.start(2) 
   
-  # Start Webinterface
-  webInterfaceThread = threading.Thread(target=launch_web_interface)
-  webInterfaceThread.start()
+    # Start Webinterface
+    webInterfaceThread = threading.Thread(target=launch_web_interface)
+    webInterfaceThread.start()
 
-  # Wait for closing
-  webInterfaceThread.join()
-  Components.Model.eventQueue.join()
-  logger.info("Closing...")
-  time.sleep(0.1)    
+    # Wait for closing
+    webInterfaceThread.join()
+    Components.Model.eventQueue.join()
+    logger.info("Closing...")
+    time.sleep(0.1)    
+  
+    # Close all threads
+    for thread in threading.enumerate():
+      if thread.isAlive():
+        try:
+          thread._Thread__stop()
+        except:
+          print(str(thread.getName()) + ' could not be terminated')
 
 if __name__ == '__main__':
     main()
