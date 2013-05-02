@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="include/dotConnect.css">
 </head>
 <body onunload="jsPlumb.unload();">
+<div id="loading">
+<br>Loading...
+<br><small><em><span id="loading-status"></span></em></small>
+</div>
+
 <div id="workspace">
 </div>
 
@@ -34,7 +39,6 @@ S
 Workspace: 
 <select id="workspaceOption">
 <option>default</option>
-<option>test1</option>
 </select>
 <a href="#" onclick="alert('not implemented')">+</a> 
 </div>
@@ -45,12 +49,21 @@ Workspace:
 <input type="hidden" id="form-name" >
 <strong>Type:</strong><br> <em><span id="form-type"></span></em><br><br>
 <strong>Properties:</strong><br>
-<div id="form-properties">
-<table border="0">
-</table> 
+<div id="form-properties"> </div>
+</form>
+
 </div>
 
+<div id="dialog-add" title="Add Component?">
 
+<form>
+<input type="hidden" id="form-add-name" >
+<strong>Type:</strong><br> 
+<select id="form-add-type">
+</select>
+<br><br>
+<strong>Name:</strong><br>
+<input id="form-add-name">
 </form>
 
 </div>

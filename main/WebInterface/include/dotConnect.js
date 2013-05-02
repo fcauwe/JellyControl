@@ -89,6 +89,7 @@
 
 
 jsPlumb.bind("ready", function() {
+  $( "#loading-status" ).html("Loading dialogs...");
   $( "#addmenu" ).menu({ position: { my: "right top", at: "left bottom" } });
   $( "#dialog-edit" ).dialog({
                               autoOpen:false,
@@ -101,10 +102,24 @@ jsPlumb.bind("ready", function() {
                                 "Cancel": function() {$(this).dialog("close");}
                               }
                       }); 
+  $( "#dialog-add" ).dialog({
+                              autoOpen:false,
+                              resizable: false,
+                              modal: true,
+                              width: 450,
+                              buttons: {
+                                "Add": function(){editChangeComponent();$(this).dialog("close");},
+                                "Cancel": function() {$(this).dialog("close");}
+                              }
+                      }); 
+ 
+
+  $( "#loading-status" ).html("Loading components...");
   loadComponentList();
   loadModel();
-  loadWorksheetList(); 
-
+  loadWorksheetList();
+  $(window).bind("load", function() {$("#loading").hide(); }); 
+//  $("#loading").hide(500);
  //jsPlumbComponent.init();
   //loadComponents();
   //loadConnections();
@@ -187,6 +202,7 @@ function loadModel(){
   var getLink = location.href.substring(0,location.href.lastIndexOf("/")+1);
   $.getJSON(getLink + "connect.openModel.json?name=" + modelName + "&jsoncallback=?",
     function(data){
+      $( "#loading-status" ).html("Loading model...");
       componentList=data["componentList"];
       proxyList=data["proxyList"];
       document.title = ".Connect: " + modelName;
@@ -197,8 +213,10 @@ function loadModel(){
       workspaceList = listWorkspaces();
       // Restart jsplumb (clean up)
       jsPlumbComponent.init();
+      $( "#loading-status" ).html("Loading components...");
       loadComponents();
       loadProxys();
+      $( "#loading-status" ).html("Loading connection...");
       loadConnections();
 
 
@@ -214,14 +232,29 @@ function loadComponentList(){
     function(data){
       componentType=jQuery.extend(data,componentTypeExtra)
       //componentType=data;
+      var select =  document.getElementById('form-add-type')
+      for ( component in componentType ){
+        new_option = document.createElement('option');
+        new_option.value = component;
+        new_option.text = component;
+        select.appendChild(new_option);
+      }
+ 
     });
 }    
 
 function listWorkspaces(){
   var list = ["default"]
+  var select =  document.getElementById('workspaceOption')
+
   for (var comp in componentList ){
     if(list.indexOf(componentList[comp]["workspace"])==-1){ 
       list.push(componentList[comp]["workspace"]);
+      new_option = document.createElement('option');
+      new_option.value = componentList[comp]["workspace"];
+      new_option.text = componentList[comp]["workspace"];
+      select.appendChild(new_option);
+      
     }
   }
   return list
