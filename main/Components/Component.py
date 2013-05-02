@@ -10,7 +10,7 @@ class generic:
      else:
        self.state = {}
      self.stateVersion = 0
-     if (hasattr(self, 'defaultCopy')):
+     if (hasattr(self, 'defaultConfig')):
        self.config = self.defaultConfig.copy()
      else:
        self.config = {}
@@ -37,9 +37,9 @@ class generic:
      return self.config[name]
    def setConfigVariable(self,name,value):
      self.config[name]=value
-   def init(self):
-     if(hasattr(self,"do_init")):
-       self.do_init()
+   def doInit(self):
+     if(hasattr(self,"init")):
+       self.init()
    def generateEvent(self,port,value):
      Events.generate(self.componentId,port,value)
 

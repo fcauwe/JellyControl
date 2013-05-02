@@ -32,12 +32,21 @@ def loadComponents():
         Model.modelComponents[componentId]=component(componentId)
         if(Model.model[componentId].has_key("config")):
           Model.modelComponents[componentId].setConfig(Model.model[componentId]["config"])
+
       except Exception, e:
         tb = traceback.extract_tb(sys.exc_info()[2])[-1]      
         logger.error("Could not load component " + componentId + " / " + Model.model[componentId]["type"] + ": "
                       + e.message + " (" +os.path.basename(tb[0]) + ":" + str(tb[1])+ ").")
         continue
-
+      
+      try:
+        Model.modelComponents[componentId].doInit()
+      except Exception, e:
+        tb = traceback.extract_tb(sys.exc_info()[2])[-1]      
+        logger.error("Could not init component " + componentId + " / " + Model.model[componentId]["type"] + ": "
+                      + e.message + " (" +os.path.basename(tb[0]) + ":" + str(tb[1])+ ").")
+        continue
+ 
 
 def processEvent():
   # Load Logger
