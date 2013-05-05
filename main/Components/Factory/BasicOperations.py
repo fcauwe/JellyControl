@@ -123,5 +123,47 @@ class ProxyPort(Component.generic):
       self.setStateVariable('value',result)
       self.generateEvent('Out',{'value':result})
 
+class Bigger(Component.generic):
+  Name = 'Bigger'
+  sinkList = ['In']
+  sourceList = ['Out']
+  defaultState={'value':False}
+  defaultConfig={'threshold':0}
+
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
+  
+  def catchEvent(self,event,value):
+    if (value['value']>float(self.getConfigVariable("threshold"))):
+      result=True
+    else:
+      result=False
+    
+    if (result != self.getStateVariable('value')):
+      self.setStateVariable('value',result)
+      self.generateEvent('Out',{'value':result})
+
  
+class Smaller(Component.generic):
+  Name = 'Smaller'
+  sinkList = ['In']
+  sourceList = ['Out']
+  defaultState={'value':False}
+  defaultConfig={'threshold':0}
+
+  def __init__(self,componentId):
+    Component.generic.__init__(self,componentId)
+  
+  def catchEvent(self,event,value):
+    if (float(value['value'])<float(self.getConfigVariable("threshold"))):
+      result=True
+    else:
+      result=False
+
+    if (result != self.getStateVariable('value')):
+      self.setStateVariable('value',result)
+      self.generateEvent('Out',{'value':result})
+
+ 
+
 
