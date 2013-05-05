@@ -3,4 +3,6 @@ Connect
 
 Check if all connections are consistend (have a endpoint)
 
+ * Portnames with a dot are not allowed
+
 
