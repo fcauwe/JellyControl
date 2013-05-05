@@ -8,7 +8,7 @@
                         // default to blue at one end and green at the other
                         EndpointStyles : [{ fillStyle:'#225588' }, { fillStyle:'#558822' }],
                         // blue endpoints 7 px; green endpoints 11.
-                        Endpoints : [ [ "Dot", {radius:7} ], [ "Dot", { radius:11 } ]],
+                        Endpoints : [ [ "Dot", {radius:5} ], [ "Dot", { radius:5 } ]],
                         // the overlays to decorate each connection with.  
                         // note that the label overlay uses a function to generate the label text; in this
                         // case it returns the 'labelText' member that we set on each connection in the 
@@ -351,7 +351,7 @@ function createVisualComponent(name, type, position){
   
   // resize div to fitt connection 
   var maxconnections = Math.max(sinks.length,sources.length); 
-  var height=maxconnections*15+30; 
+  var height=(maxconnections+1)*22; 
   $("#"+divname).height(height);
   
   // Set the right position

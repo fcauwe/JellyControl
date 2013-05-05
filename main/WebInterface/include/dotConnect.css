@@ -84,7 +84,7 @@ filter:alpha(opacity=60);
 #window3 { top:20em;left:49em; }
 #window4 { top:27em; left:19em;}
 ._jsPlumb_connector { z-index:4; }
-._jsPlumb_endpoint, .endpointTargetLabel, .endpointSinkLabel, .endpointSourceLabel{ z-index:21;cursor:pointer; font-size:10px; }
+._jsPlumb_endpoint, .endpointTargetLabel, .endpointSinkLabel, .endpointSourceLabel{ z-index:21;cursor:pointer; font-size:9px; }
 .hl { border:3px solid red; }
 #debug { position:absolute; background-color:black; color:red; z-index:5000 }
 
