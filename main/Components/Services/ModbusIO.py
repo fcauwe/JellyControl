@@ -77,13 +77,14 @@ class ModbusIO(Component.generic):
               if(adres_definition[adres].has_key("event_" + str(bit))):
                 event_name = adres_definition[adres]["event_" + str(bit)]
               if(event_name==None):
-                event_name="DI" + str(adres) + "." + str( bit )
+                event_name="DI" + str(adres) + "b" + str( bit )
               self.modbus_read_event.append(event_name)
               adres_definition[adres]["event_" + str(bit)] = event_name
             # end for bit
           elif(adres_definition[adres]["type"].lower()=="analog"):
             self.modbus_read_type[adres]="A"
             threshold=float(adres_definition[adres]["threshold"])*float(adres_definition[adres]["scale"])
+            print threshold
             self.modbus_read_analog_threshold[adres]=int(threshold)
             self.modbus_read_analog_scale[adres]=float(adres_definition[adres]["scale"])
             # Add event to the list
@@ -110,7 +111,7 @@ class ModbusIO(Component.generic):
               if(adres_definition[adres].has_key("event_" + str(bit))):
                 event_name = adres_definition[adres]["event_" + str(bit)]
               if(event_name==None):
-                event_name="DO" + str(adres) + "." + str( bit )
+                event_name="DO" + str(adres) + "b" + str( bit )
               self.modbus_write_event.append(event_name)
               self.modbus_write_dict[event_name]={"adres":adres,"bit":bit,"type":"D"}
               adres_definition[adres]["event_" + str(bit)] = event_name
@@ -195,7 +196,7 @@ class ModbusIO(Component.generic):
                 # Generate event
                 eventName=self.configuration["input"]["adres_definition"]["adres"][i]["event"]
                 value = float(state_read_new[i]) / self.modbus_read_analog_scale[i]
-                self.generateEvent(self.componentId,eventName,{'value':value})
+                self.generateEvent(eventName,{'value':value})
                 #print str(i) + ": " + str(value)
  
                 ## Save new state
