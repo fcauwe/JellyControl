@@ -1,5 +1,4 @@
 from Components import Component
-import time
 from threading import Timer
 
 class DelayOn(Component.generic):
