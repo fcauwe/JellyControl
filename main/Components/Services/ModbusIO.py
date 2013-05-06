@@ -84,7 +84,6 @@ class ModbusIO(Component.generic):
           elif(adres_definition[adres]["type"].lower()=="analog"):
             self.modbus_read_type[adres]="A"
             threshold=float(adres_definition[adres]["threshold"])*float(adres_definition[adres]["scale"])
-            print threshold
             self.modbus_read_analog_threshold[adres]=int(threshold)
             self.modbus_read_analog_scale[adres]=float(adres_definition[adres]["scale"])
             # Add event to the list
