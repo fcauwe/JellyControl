@@ -135,6 +135,15 @@ class WebInterfaceHandler(BaseHTTPRequestHandler):
 
                 return
 
+            if filename.endswith(".csv"):
+                f = open(os.curdir + os.sep + "logging" + os.sep + filename) 
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
+                return
+
+
             
             self.send_error(404,'File Not Found 1: %s' % filename)                
             return

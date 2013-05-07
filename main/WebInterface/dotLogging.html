@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>.Logging</title>
+  <link rel="stylesheet" href="include/style.css">
+  <link rel="stylesheet" href="include/jquery-ui.css">
+  <link rel="stylesheet" href="include/dotConnect.css">
+</head>
+<body>
+<div id="graph">
+</div>
+
+<div id="switchWorkspace">
+Workspace: 
+<select id="workspaceOption">
+<option>default</option>
+</select>
+</div>
+
+
+
+<script type='text/javascript' src='include/jquery.js'></script>
+<script type='text/javascript' src='include/jquery-ui.js'></script>
+<script type='text/javascript' src='include/dygraph.js'></script>
+<script type='text/javascript' src='include/webtoolkit.base64.js'></script>
+<script type='text/javascript' >
+
+ new Dygraph(document.getElementById("graph"), "log.csv" , { labels: [ "Date", "Series1", "Series2" ] });
+
+</script>
+</body>
+</html>
