@@ -263,13 +263,14 @@ function listWorkspaces(){
 function addWorkspace(){
 
   var name = prompt("Workspace name?")
-  var select =  document.getElementById('workspaceOption')
-  new_option = document.createElement('option');
-  new_option.value = name;
-  new_option.text = name;
-  select.appendChild(new_option);
-  workspaceList.push(name)
-
+  if (name!=null){
+    var select =  document.getElementById('workspaceOption')
+    new_option = document.createElement('option');
+    new_option.value = name;
+    new_option.text = name;
+    select.appendChild(new_option);
+    workspaceList.push(name)
+  }
 
 }
 
