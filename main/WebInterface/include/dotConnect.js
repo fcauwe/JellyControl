@@ -260,6 +260,21 @@ function listWorkspaces(){
   return list
 }
 
+function addWorkspace(){
+
+  var name = prompt("Workspace name?")
+  var select =  document.getElementById('workspaceOption')
+  new_option = document.createElement('option');
+  new_option.value = name;
+  new_option.text = name;
+  select.appendChild(new_option);
+  workspaceList.push(name)
+
+
+}
+
+
+
 function addComp(){
   var type = prompt("component type?");
   var name = prompt("Component name?",type);
