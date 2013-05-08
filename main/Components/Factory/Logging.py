@@ -1,19 +1,20 @@
 from Components import Component
 from threading import Timer
-import datetime
+import datetime, pytz
 
 class event2csv(Component.generic):
   Name = 'event2csv'
   sinkList = ['In']
   sourceList = []
   defaultState={}
-  defaultConfig={'filename':'log.csv'}
+  defaultConfig={'filename':'log.csv','timezone':'Europe/Brussels'}
 
   def __init__(self,compid):
     Component.generic.__init__(self,compid)
 
   def catchEvent(self,event,value):
-    time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S") 
+    tz=pytz.timezone(self.getConfigVariable("timezone"))
+    time = datetime.datetime.now(tz).strftime("%Y/%m/%d %H:%M:%S") 
     f = open("logging/" + self.getConfigVariable("filename"), 'a')
     f.write(time + "," + str(value["value"]) + '\n')
     f.close()
