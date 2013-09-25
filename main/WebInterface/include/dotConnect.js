@@ -108,7 +108,7 @@ jsPlumb.bind("ready", function() {
                               modal: true,
                               width: 450,
                               buttons: {
-                                "Add": function(){editChangeComponent();$(this).dialog("close");},
+                                "Add": function(){addComponentDialogDone();$(this).dialog("close");},
                                 "Cancel": function() {$(this).dialog("close");}
                               }
                       }); 
@@ -276,12 +276,19 @@ function addWorkspace(){
 
 
 
-function addComp(){
-  var type = prompt("component type?");
-  var name = prompt("Component name?",type);
-  if ((name!=null)&&(type!=null))
+function addComponentDialog(){
+  $("#form-add-name").val(""); 
+  $("#dialog-add" ).dialog( "open" );
+}
+
+function addComponentDialogDone(){
+  var type = $("#form-add-type").val();
+  var name = $("#form-add-name").val();
+  if ((name!="")&&(type!=""))
     addComponent(name,type);
 }
+
+
 
 function addProx(){
   var porttype = prompt("Port type (source/sink)?");
