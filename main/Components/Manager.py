@@ -79,7 +79,8 @@ def listAllComponents():
             if(issubclass(componentObject,Component.generic)):
               componentList[module + "." + component]={'sources':componentObject.sourceList,
                                                        'sinks':componentObject.sinkList,
-                                                       'config':componentObject.defaultConfig}
+                                                       'config':componentObject.defaultConfig,
+                                                       'doc':componentObject.__doc__}
         except Exception, e:
           logger.error("Could not inspect " + component + ": " + e.message)
           continue
