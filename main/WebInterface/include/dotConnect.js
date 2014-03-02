@@ -112,6 +112,16 @@ jsPlumb.bind("ready", function() {
                                 "Cancel": function() {$(this).dialog("close");}
                               }
                       }); 
+   $( "#dialog-add-proxy" ).dialog({
+                              autoOpen:false,
+                              resizable: false,
+                              modal: true,
+                              width: 450,
+                              buttons: {
+                                "Add": function(){addProxyDialogDone();$(this).dialog("close");},
+                                "Cancel": function() {$(this).dialog("close");}
+                              }
+                      }); 
  
 
   $( "#loading-status" ).html("Loading components...");
@@ -257,6 +267,7 @@ function listWorkspaces(){
       
     }
   }
+  sortOptionlist('workspaceOption')
   return list
 }
 
@@ -288,15 +299,49 @@ function addComponentDialogDone(){
     addComponent(name,type);
 }
 
+function addProxyDialog(){
+  //$("#form-add-proxy-port option").each(function() { $(this).remove(); });
 
+  $("#form-add-proxy-component option").each(function() { $(this).remove(); });
+  var select =  document.getElementById('form-add-proxy-component')
+  for (var comp in componentList ){
+    // Update Dialog Add Proxy
+    new_option = document.createElement('option');
+    new_option.value = comp;
+    new_option.text = comp;
+    select.appendChild(new_option);
+  }
+  sortOptionlist('form-add-proxy-component')
 
-function addProx(){
-  var porttype = prompt("Port type (source/sink)?");
-  var component = prompt("Component name?");
-  var port = prompt("Port name?");
-  if ((component!=null)&&(port!=null))
-    addProxy(component,port,porttype);
+  addProxyDialogUpdatePorts(); 
+  $("#dialog-add-proxy" ).dialog( "open" );
 }
+
+function addProxyDialogUpdatePorts(){
+  var type = $("#form-add-proxy-type").val() + "s";
+  var comp=$("#form-add-proxy-component").val();
+  var compType = componentList[comp]["type"];
+  $("#form-add-proxy-port option").each(function() { $(this).remove(); });
+  var select =  document.getElementById('form-add-proxy-port')
+  for ( port in componentType[compType][type] ){
+    portname = componentType[compType][type][port]
+    new_option = document.createElement('option');
+    new_option.value = portname;
+    new_option.text = portname;
+    select.appendChild(new_option);
+  }
+
+  sortOptionlist('form-add-proxy-port')
+}
+
+function addProxyDialogDone(){
+  var type = $("#form-add-proxy-type").val();
+  var component = $("#form-add-proxy-component").val();
+  var port = $("#form-add-proxy-port").val();
+  if ((component!="")&&(type!="")&&(port!=""))
+    addProxy(component,port,type);
+}
+
 
 
 function addComponent(name,type){
@@ -315,8 +360,16 @@ function removeComp(){
   var name=$("#form-name").val();
   if (name!="")
     removeComponent(name);
-
 }
+
+function removeProxy(name){
+  if (confirm("Delete proxy " + name + "?")){
+ 
+
+    alert(name)
+  }
+}
+
 
 function removeComponent(name){
   // remove existing connection 
@@ -455,15 +508,34 @@ function createVisualProxy(name){
 								       cssClass:"endpointSourceLabel"}]]
 						 });
   }
+  $('#' + divname).dblclick(function(){removeProxy(name);})
 }
 
 function loadComponents (){
+  var select =  document.getElementById('form-add-proxy-component')
+ 
   for (var comp in componentList ){
+    // Update Dialog Add Proxy
+    new_option = document.createElement('option');
+    new_option.value = comp;
+    new_option.text = comp;
+    select.appendChild(new_option);
     // Check if component is listed in current workspace
     if(componentList[comp]["workspace"]==workspaceActive){ 
       createVisualComponent(comp,componentList[comp]["type"],componentList[comp]["position"]);
     }
   }
+  sortOptionlist('form-add-proxy-component')
+}
+
+function sortOptionlist(name){
+  var my_options = $("#" + name + " option");
+  my_options.sort(function(a,b) {
+    if (a.text > b.text) return 1;
+    else if (a.text < b.text) return -1;
+    else return 0
+  })
+  $("#" + name).empty().append( my_options );
 }
 
 function loadProxys (){

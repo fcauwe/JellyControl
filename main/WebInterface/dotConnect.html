@@ -21,7 +21,7 @@
   <li>
     <a href="#" id="addComp">+</a>     <ul>
       <li><a href="#" onclick="addComponentDialog()">Component</a></li>
-      <li><a href="#" onclick="addProx()">Proxy</a></li>
+      <li><a href="#" onclick="addProxyDialog()">Proxy</a></li>
     </ul>
   </li>
 </ul>
@@ -54,6 +54,27 @@ Workspace:
 </form>
 
 </div>
+
+<div id="dialog-add-proxy" title="Add Proxy?">
+
+<form>
+<strong>Type:</strong><br> 
+<select onchange="addProxyDialogUpdatePorts();" id="form-add-proxy-type">
+<option>source</option>
+<option>sink</option>
+</select>
+<br><strong>Component:</strong><br> 
+<select onchange="addProxyDialogUpdatePorts();" id="form-add-proxy-component">
+</select>
+<br><strong>Port:</strong><br> 
+<select id="form-add-proxy-port">
+</select>
+
+
+</form>
+
+</div>
+
 
 <div id="dialog-add" title="Add Component?">
 
