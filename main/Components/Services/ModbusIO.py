@@ -184,6 +184,7 @@ class ModbusIO(Component.generic):
                 if((changed >> j) & 1):
                   # Generate event
                   eventName=self.configuration["input"]["adres_definition"]["adres"][i]["event_" + str(j)]
+		  logger.info("Component " + self.componentId + ": got event " + eventName + ".")
                   self.generateEvent(eventName,{'value':((state_read_new[i]>>j) & 1)})
                   #print str(time.time()) + " " + str(i) + "." + str(j) + ": " + str((state_read_new[i]>>j) & 1)
               ## Save the new state

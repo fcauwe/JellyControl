@@ -2,6 +2,7 @@ from Components import Component
 from threading import Timer
 
 class DelayOn(Component.generic):
+  """This allows a value to be delayed """
   Name = 'DelayOn'
   sinkList = ['In']
   sourceList = ['Out']
