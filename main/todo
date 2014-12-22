@@ -4,5 +4,12 @@ Connect
 Check if all connections are consistend (have a endpoint)
 
  * Portnames with a dot are not allowed
+ * dotConnect --> check if component name is not used before adding
+ * dotMeasure 
+
+Depends:
+ * python
+ * python-tz
+ * 
 
 
