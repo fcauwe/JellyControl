@@ -569,7 +569,7 @@ function updateComponentsPosition (){
     if(componentList[comp]["workspace"]==workspaceActive){ 
       var divname = "#comp-" + comp;
       var position=$(divname).position();
-      componentList[comp]["position"]=[position.left,position.top];
+      componentList[comp]["position"]=[Math.round(position.left),Math.round(position.top)];
     }
   }
 
