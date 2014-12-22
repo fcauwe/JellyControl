@@ -1,1 +1,1 @@
-__all__=["ModbusIO","RFID"]
+__all__=["RFID"]
