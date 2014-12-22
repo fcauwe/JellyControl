@@ -6,6 +6,8 @@
 import logging
 import string,cgi,time,base64
 from os import curdir, sep
+import subprocess
+import urllib2
 
 #Load Private library's
 import GlobalObjects
@@ -33,14 +35,15 @@ def Process(filename,args):
 
     elif filename == "connect.saveModel.json":
         name=args["name"].replace('.','').replace('/','')
-        #print args["content"]
-        model=base64.b64decode(args["content"].replace('%3D','='))
+        model=base64.b64decode(urllib2.unquote(args["content"]).decode("utf8"))
         json_response={"result":"Saved!"}
         logger.info("Model "+ name + " saved.")
         try:
+            subprocess.call(GlobalObjects.config_device["savingCommands"]["before"], shell=True)
             f = open("config/models/" + name, "w")
             f.write(model) # Write a string to a file
             f.close()
+            subprocess.call(GlobalObjects.config_device["savingCommands"]["after"], shell=True)
         except IOError:
             json_response={"result":"IO error!"}
             pass
@@ -84,13 +87,15 @@ def Process(filename,args):
     elif filename == "panel.savePanel.json":
         name=args["name"].replace('.','').replace('/','')
         #print args["content"]
-        model=base64.b64decode(args["content"].replace('%3D','='))
+        model=base64.b64decode(urllib2.unquote(args["content"]).decode("utf8"))
         json_response={"result":"Saved!"}
         logger.info("Panel "+ name + " saved.")
         try:
+            subprocess.call(GlobalObjects.config_device["savingCommands"]["before"], shell=True)
             f = open("config/panels/" + name, "w")
             f.write(model) # Write a string to a file
             f.close()
+            subprocess.call(GlobalObjects.config_device["savingCommands"]["after"], shell=True)
         except IOError:
             json_response={"result":"IO error!"}
             pass
