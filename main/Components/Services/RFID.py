@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 import XmlDict,GlobalObjects
 from Components import Component
-from pymodbus.client.sync import ModbusTcpClient
-from pymodbus.exceptions import ConnectionException
 import time
 import serial
 import logging, logging.config
