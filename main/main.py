@@ -24,6 +24,7 @@ def load_config():
     logger.info("Loading Config...")
     conf=XmlDict.loadXml("config/global.xml")
     GlobalObjects.config_webinterface = conf["webinterface"]
+    GlobalObjects.config_device = conf["device"]
     GlobalObjects.config_model = conf["componentModel"]
 #    GlobalObjects.config_events = conf["events"]
 
@@ -45,8 +46,8 @@ def main():
   
     # Loading model and start worker threads
     Components.Manager.loadModel("config/" + GlobalObjects.config_model["filename"])     
-    Components.Manager.addService("ModbusIOClient","ModbusIOMain","config/io.xml")
-    Components.Manager.addService("RFID","RFIDMain","config/rfid.xml")
+##    Components.Manager.addService("ModbusIOClient","ModbusIOMain","config/io.xml")
+##    Components.Manager.addService("RFID","RFIDMain","config/rfid.xml")
 
 
     Components.Manager.start(2) 
