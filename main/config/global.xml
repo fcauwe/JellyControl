@@ -1,8 +1,16 @@
 <configuration>
+  <device>
+    <url>http://neverland.cauwe.org/JellyControl/api</url>
+    <key>125RDDGdg354YTRHDQSZA45543634DFQ2</key>
+    <savingCommands>
+      <before>echo "Do something"</before>
+      <after>echo "Do something"</after>
+    </savingCommands>
+  </device> 
   <componentModel>
     <title>General Test</title>
     <filename>models/default</filename>
-    <services>
+   <services>
      <service><name>Output</name><type>ModbusIO.ModbusIOClient</type><config>io.xml</config></service>
     </services>
   </componentModel>
