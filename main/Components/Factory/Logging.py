@@ -26,8 +26,7 @@ class event2csv(Component.generic):
   def catchEvent(self,event,value):
     ## Avoid logging to much values
     if (self.time_of_last_value <= int(time.time())):
-        self.time_of_last_value = int(time.time())+int(self.getConfigVariable("minTimeBetween"))
-      print self.time_of_last_value
+      self.time_of_last_value = int(time.time())+int(self.getConfigVariable("minTimeBetween"))
 
       tz=pytz.timezone(self.getConfigVariable("timezone"))
       current_time = datetime.datetime.now(tz).strftime("%Y/%m/%d %H:%M:%S") 
@@ -80,7 +79,7 @@ class ForwardEvent(Component.generic):
 
   def catchEvent(self,event,value):
     if (self.time_of_last_value <= int(time.time())):
-        self.time_of_last_value = int(time.time())+int(self.getConfigVariable("minTimeBetween"))
+      self.time_of_last_value = int(time.time())+int(self.getConfigVariable("minTimeBetween"))
 
       try:
         # Create an OpenerDirector with support for Basic HTTP Authentication...
@@ -121,7 +120,7 @@ class SendEmail(Component.generic):
 
   def catchEvent(self,event,value):
     if (value["value"] == True ) :
-    if (self.time_of_last_value <= int(time.time())):
+      if (self.time_of_last_value <= int(time.time())):
         self.time_of_last_value = int(time.time())+int(self.getConfigVariable("minTimeBetween"))
 
         try:
